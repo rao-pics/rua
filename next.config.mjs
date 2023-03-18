@@ -1,38 +1,28 @@
 /**
  * @type {import('next').NextConfig}
  */
+import ip from "ip";
 
-const { PROTOCOL, HOSTNAME, PORT } = process.env;
+let { API_HOST } = process.env;
 
-let host = `${PROTOCOL}://${HOSTNAME}`;
-
-if (PORT) {
-  host += `:${PORT}`;
+if (API_HOST.includes("localhost") || API_HOST.includes("127.0.0.1")) {
+  API_HOST = API_HOST.replace(/(localhost|127\.0\.0\.1)/, ip.address());
 }
-
-console.log(host);
 
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  output: "standalone",
-
-  serverRuntimeConfig: {
-    minimumCacheTTL: 3600 * 24 * 365,
-  },
 
   async redirects() {
-    if (process.env.NODE_ENV === "production") return [];
-
     return [
       {
         source: "/api/:slug*",
-        destination: `${host}/api/:slug*`,
+        destination: `${API_HOST}/api/:slug*`,
         permanent: true,
       },
       {
         source: "/static/:slug*",
-        destination: `${host}/static/:slug*`,
+        destination: `${API_HOST}/static/:slug*`,
         permanent: true,
       },
     ];
@@ -40,17 +30,6 @@ const nextConfig = {
 
   images: {
     unoptimized: true,
-    remotePatterns:
-      process.env.NODE_ENV === "production"
-        ? []
-        : [
-            {
-              protocol: PROTOCOL,
-              hostname: HOSTNAME,
-              port: PORT,
-              pathname: "/static/**",
-            },
-          ],
   },
 };
 

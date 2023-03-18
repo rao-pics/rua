@@ -28,12 +28,18 @@ const Container = ({ Component, pageProps }: AppProps) => {
     <>
       <Head>
         <title>{`${Pkg.name.toLocaleUpperCase()} - ${Pkg.description}`}</title>
-        <link rel="shortcut icon" href="/static/favicon.ico" />
-        <meta name="description" content={`${Pkg.description} - ${Pkg.name.toLocaleUpperCase()}`} />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <meta
+          name="description"
+          content={`${Pkg.description} - ${Pkg.name.toLocaleUpperCase()}`}
+        />
       </Head>
       <ConfigProvider
         theme={{
-          algorithm: theme === "light" ? AntdTheme.defaultAlgorithm : AntdTheme.darkAlgorithm,
+          algorithm:
+            theme === "light"
+              ? AntdTheme.defaultAlgorithm
+              : AntdTheme.darkAlgorithm,
         }}
         locale={zhCN}
       >
