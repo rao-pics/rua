@@ -1,4 +1,4 @@
-import { Prisma } from "@eagleuse/prisma-client";
+import { Prisma } from "@raopics/prisma-client";
 
 interface QueryParams {
   // [min width, max width]
@@ -42,7 +42,9 @@ export const getLoadMoreList = (
             // 扩展名
             ext && { ext: { contains: ext } },
             // 关键词
-            k && { OR: [{ annotation: { contains: k } }, { name: { contains: k } }] },
+            k && {
+              OR: [{ annotation: { contains: k } }, { name: { contains: k } }],
+            },
           ]
             .concat(more || { isDeleted: false })
             .filter((item) => item), // 排除null
@@ -68,14 +70,17 @@ export const getLoadMoreList = (
   });
 };
 
-const handleOrderBy = (s: QueryParams["s"]): Prisma.Enumerable<Prisma.ImageOrderByWithRelationInput> => {
+const handleOrderBy = (
+  s: QueryParams["s"]
+): Prisma.Enumerable<Prisma.ImageOrderByWithRelationInput> => {
   const json: Prisma.Enumerable<Prisma.ImageOrderByWithRelationInput> = {};
 
   if (!s) {
     // 默认值
     json.modificationTime = "desc";
   } else {
-    const field = (s[0] || "modificationTime") as keyof Prisma.ImageOrderByWithRelationInput;
+    const field = (s[0] ||
+      "modificationTime") as keyof Prisma.ImageOrderByWithRelationInput;
     const type = (s[1] || "desc") as Prisma.SortOrder;
     json[field] = type;
   }
@@ -83,7 +88,10 @@ const handleOrderBy = (s: QueryParams["s"]): Prisma.Enumerable<Prisma.ImageOrder
   return json;
 };
 
-const handleSize = (size: { w: QueryParams["w"]; h: QueryParams["h"] }): Prisma.ImageWhereInput[] => {
+const handleSize = (size: {
+  w: QueryParams["w"];
+  h: QueryParams["h"];
+}): Prisma.ImageWhereInput[] => {
   const { w, h } = size;
   const params: Prisma.ImageWhereInput[] = [];
 

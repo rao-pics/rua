@@ -1,13 +1,25 @@
-import { forwardRef, useContext, useEffect, useImperativeHandle, useRef } from "react";
+import {
+  forwardRef,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from "react";
 import { LayoutContentRefContext, rightBasicState } from "@/store";
 import JustifyLayout from "@/components/JustifyLayout";
 import { useInfiniteScroll } from "ahooks";
 import Search from "@/components/Search";
-import { ArrayParam, BooleanParam, NumberParam, StringParam, useQueryParams } from "use-query-params";
+import {
+  ArrayParam,
+  BooleanParam,
+  NumberParam,
+  StringParam,
+  useQueryParams,
+} from "use-query-params";
 import { MoreListResult, getLoadMoreList } from "@/utils/getLoadmoreList";
 import { useRouter } from "next/router";
 import { useRecoilState } from "recoil";
-import { Prisma } from "@eagleuse/prisma-client";
+import { Prisma } from "@raopics/prisma-client";
 
 interface Props {
   more?: Prisma.Enumerable<Prisma.ImageWhereInput>;
@@ -72,7 +84,10 @@ const Page = forwardRef<PageHandle, Props>((props, ref) => {
     const { data } = infiniteScroll;
     if (!data) return;
 
-    if (rightBasic.fileCount != data?.count || rightBasic.fileSize != data.size) {
+    if (
+      rightBasic.fileCount != data?.count ||
+      rightBasic.fileSize != data.size
+    ) {
       setRightBasic({
         ...rightBasic,
         fileCount: data.count,

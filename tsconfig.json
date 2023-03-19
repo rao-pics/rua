@@ -16,7 +16,7 @@
     "incremental": true,
     "paths": {
       "@/*": ["./*"],
-      "@eagleuse/prisma-client": ["./node_modules/prisma-client/dist"]
+      "@raopics/prisma-client": ["./node_modules/prisma-client/dist"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

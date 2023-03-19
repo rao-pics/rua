@@ -18,12 +18,12 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 9623",
     "lint": "next lint",
     "db:generate": "prisma generate"
   },
   "prisma": {
-    "schema": "./node_modules/@eagleuse/prisma-client/prisma/schema.prisma"
+    "schema": "./node_modules/@raopics/prisma-client/prisma/schema.prisma"
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
@@ -45,7 +45,7 @@
     "use-query-params": "^2.2.0"
   },
   "devDependencies": {
-    "@eagleuse/prisma-client": "^1.1.1",
+    "@raopics/prisma-client": "^1.1.1",
     "@next/eslint-plugin-next": "^13.2.3",
     "@prisma/client": "^4.11.0",
     "@types/justified-layout": "^4.1.0",
