@@ -1,17 +1,13 @@
 /**
  * @type {import('next').NextConfig}
  */
-import ip from "ip";
 
 let { API_HOST } = process.env;
-
-if (API_HOST.includes("localhost") || API_HOST.includes("127.0.0.1")) {
-  API_HOST = API_HOST.replace(/(localhost|127\.0\.0\.1)/, ip.address());
-}
 
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  output: "standalone",
 
   async redirects() {
     return [
