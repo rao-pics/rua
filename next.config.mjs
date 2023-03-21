@@ -2,15 +2,18 @@
  * @type {import('next').NextConfig}
  */
 
-let { API_HOST, NODE_ENV } = process.env;
+let { API_HOST, ignoreBuildErrors = "true" } = process.env;
 
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  output: "standalone",
 
+  // 开发模式如果需要主题开发，可以设置为false
+  // 配置DATABASE_URL
+  // 执行 pnpm db:generate
+  // 生成 types 类型文件
   typescript: {
-    ignoreBuildErrors: NODE_ENV === "production",
+    ignoreBuildErrors: ignoreBuildErrors === "true",
   },
 
   async redirects() {
