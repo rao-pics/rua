@@ -17,8 +17,9 @@
   },
   "scripts": {
     "dev": "ignoreBuildErrors=false next dev",
+    "start": "next dev",
     "build": "next build",
-    "start": "next start -p 9623",
+    "preview": "next start -p 9623",
     "lint": "next lint",
     "db:generate": "prisma generate"
   },
