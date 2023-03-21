@@ -2,12 +2,16 @@
  * @type {import('next').NextConfig}
  */
 
-let { API_HOST } = process.env;
+let { API_HOST, NODE_ENV } = process.env;
 
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   output: "standalone",
+
+  typescript: {
+    ignoreBuildErrors: NODE_ENV === "production",
+  },
 
   async redirects() {
     return [

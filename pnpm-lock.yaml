@@ -2,26 +2,25 @@ lockfileVersion: 5.4
 
 specifiers:
   '@ant-design/icons': ^5.0.1
-  '@next/eslint-plugin-next': ^13.2.4
+  '@next/eslint-plugin-next': ^13.2.3
   '@prisma/client': ^4.11.0
-  '@raopics/prisma-client': ^1.2.0
+  '@raopics/prisma-client': ^1.1.1
   '@types/justified-layout': ^4.1.0
   '@types/lodash': ^4.14.191
   '@types/node': 18.14.6
   '@types/react': 18.0.28
   '@types/react-dom': 18.0.11
-  '@typescript-eslint/eslint-plugin': ^5.55.0
-  '@typescript-eslint/parser': ^5.55.0
+  '@typescript-eslint/eslint-plugin': ^5.52.0
+  '@typescript-eslint/parser': ^5.52.0
   ahooks: ^3.7.5
-  antd: ^5.3.1
-  eslint: ^8.36.0
-  eslint-config-next: ^13.2.4
-  ip: ^1.1.8
+  antd: ^5.3.0
+  eslint: ^8.34.0
+  eslint-config-next: ^13.2.3
   justified-layout: ^4.1.0
   lodash: ^4.17.21
   next: 13.2.3
   next-query-params: ^4.1.0
-  prisma: ^4.11.0
+  prisma: ^4.10.1
   react: 18.2.0
   react-dom: 18.2.0
   recoil: ^0.7.7
@@ -55,7 +54,6 @@ devDependencies:
   '@types/lodash': 4.14.191
   '@typescript-eslint/eslint-plugin': 5.55.0_342y7v4tc7ytrrysmit6jo4wri
   '@typescript-eslint/parser': 5.55.0_vgl77cfdswitgr47lm5swmv43m
-  ip: 1.1.8
   prisma: 4.11.0
 
 packages:
@@ -1780,10 +1778,6 @@ packages:
   /intersection-observer/0.12.2:
     resolution: {integrity: sha512-7m1vEcPCxXYI8HqnL8CKI6siDyD+eIWSwgB3DZA+ZTogxk9I4CDnj4wilt9x/+/QbHI4YG5YZNmC6458/e9Ktg==}
     dev: false
-
-  /ip/1.1.8:
-    resolution: {integrity: sha512-PuExPYUiu6qMBQb4l06ecm6T6ujzhmh+MeJcW9wa89PoAz5pvd4zPgN5WJV104mb6S2T1AwNIAaB70JNrLQWhg==}
-    dev: true
 
   /is-arguments/1.1.1:
     resolution: {integrity: sha512-8Q7EARjzEnKpt/PCD7e1cgUS0a6X8u5tdSiMqXhojOdoV9TsMsiO+9VLC5vAmO8N7/GmXn7yjR8qnA6bVAEzfA==}
