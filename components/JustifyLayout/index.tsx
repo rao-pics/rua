@@ -1,10 +1,10 @@
 import justifyLayout from "justified-layout";
 import { Button, Card, Layout, Row, Col, theme, Empty, Badge } from "antd";
 import { useEffect, useMemo, useState } from "react";
-import { getPalettes } from "@/utils";
+import { getPalettes, handleImageUrl } from "@/utils";
 import { useRecoilState } from "recoil";
 import { rightBasicState } from "@/store";
-import { useSize } from "ahooks";
+import { useEventListener, useSize } from "ahooks";
 import ImageModal from "./ImageModal";
 import { MoreListResult } from "@/utils/getLoadmoreList";
 import CustomImage from "../CustomImage";
@@ -48,14 +48,33 @@ const JustifyLayout = ({ infiniteScroll, header }: Props) => {
   const size = useSize(() => document.body);
   const [open, setOpen] = useState(false);
 
-  const isPC = useMemo(() => size && size?.width > token.screenXXL, [size, token]);
+  // 监听空格，空额
+  useEventListener("keydown", (ev) => {
+    if (ev.code === "Space" && activeImage) {
+      ev.preventDefault();
+      if (isPC) {
+        // 新开页面查看原图
+        const url = handleImageUrl(activeImage, true);
+        window.open(url);
+      } else {
+        // 移动端
+        setOpen(true);
+      }
+    }
+  });
+
+  const isPC = useMemo(
+    () => size && size?.width > token.screenXXL,
+    [size, token]
+  );
 
   useEffect(() => {
     if (!size || !size.width) return;
     const clientWidth = size.width;
     setLayoutPos(
       justifyLayout([...images], {
-        containerWidth: clientWidth - (clientWidth > token.screenXXL ? 490 : 245),
+        containerWidth:
+          clientWidth - (clientWidth > token.screenXXL ? 490 : 245),
         targetRowHeight: 200,
         boxSpacing: {
           horizontal: 15,
@@ -98,9 +117,14 @@ const JustifyLayout = ({ infiniteScroll, header }: Props) => {
               <Card
                 hoverable
                 style={{
-                  background: palettes ? `rgb(${palettes[0].color}, .25)` : token.colorBgBase,
+                  background: palettes
+                    ? `rgb(${palettes[0].color}, .25)`
+                    : token.colorBgBase,
                   overflow: "hidden",
-                  outline: activeImage?.id === image.id ? `4px solid ${token.colorPrimary}` : "",
+                  outline:
+                    activeImage?.id === image.id
+                      ? `4px solid ${token.colorPrimary}`
+                      : "",
                 }}
                 bordered={false}
                 bodyStyle={{ padding: 0, ...item }}
@@ -115,14 +139,21 @@ const JustifyLayout = ({ infiniteScroll, header }: Props) => {
                   });
                 }}
               >
-                <CustomImage image={image} width={item.width} height={item.height} />
+                <CustomImage
+                  image={image}
+                  width={item.width}
+                  height={item.height}
+                />
               </Card>
             );
 
             return (
               <div style={{ ...item, position: "absolute" }} key={image.id}>
                 {["gif", "mp4"].includes(image.ext.toLocaleLowerCase()) ? (
-                  <Badge.Ribbon placement="start" text={image.ext.toLocaleUpperCase()}>
+                  <Badge.Ribbon
+                    placement="start"
+                    text={image.ext.toLocaleUpperCase()}
+                  >
                     {card}
                   </Badge.Ribbon>
                 ) : (
@@ -137,7 +168,11 @@ const JustifyLayout = ({ infiniteScroll, header }: Props) => {
           <Col>{loadmore()}</Col>
         </Row>
 
-        <ImageModal image={activeImage} open={open} onCancel={() => setOpen(false)} />
+        <ImageModal
+          image={activeImage}
+          open={open}
+          onCancel={() => setOpen(false)}
+        />
       </Layout.Content>
     </Layout>
   );
