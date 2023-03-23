@@ -28,7 +28,7 @@ const SideMenu = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const router = useRouter();
   const { token } = theme.useToken();
-  const [, setRightBasic] = useRecoilState(rightBasicState);
+  const [rightBasic, setRightBasic] = useRecoilState(rightBasicState);
 
   // 文件夹
   const folders = useRecoilValue(foldersState);
@@ -43,12 +43,16 @@ const SideMenu = () => {
         const wrapper = doms[doms.length - 1];
         if (!wrapper) return;
         const selectDom = wrapper.querySelector(".ant-menu-title-content");
-        if (selectDom) {
-          setRightBasic((rightBasic) => ({ ...rightBasic, image: null, name: selectDom?.innerHTML }));
+        if (selectDom && selectDom.innerHTML != rightBasic.name) {
+          setRightBasic({
+            ...rightBasic,
+            image: undefined,
+            name: selectDom?.innerHTML,
+          });
         }
       });
     },
-    [setRightBasic]
+    [setRightBasic, rightBasic]
   );
 
   useEffect(() => {
@@ -76,8 +80,11 @@ const SideMenu = () => {
     if (route.includes("/recycle")) return setSelectedKeys(["/recycle"]);
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const folderIconClick = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, props: any) => {
+  const folderIconClick = (
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    props: any
+  ) => {
     e.stopPropagation();
 
     const { eventKey = "" } = props;
@@ -101,7 +108,10 @@ const SideMenu = () => {
     }
   }, [foldersTree, onTitleClick, openKeys]);
 
-  const items = useMemo(() => baseItems.concat(folderItems || []), [folderItems]);
+  const items = useMemo(
+    () => baseItems.concat(folderItems || []),
+    [folderItems]
+  );
 
   return (
     <>
