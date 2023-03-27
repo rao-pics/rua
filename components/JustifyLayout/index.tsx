@@ -38,6 +38,9 @@ interface Props {
   };
 }
 
+// 需要标注的扩展名
+const _labelExt = ["gif", "mp4", "pdf"];
+
 const JustifyLayout = ({ infiniteScroll, header }: Props) => {
   const [layoutPos, setLayoutPos] = useState<JustifiedLayoutResult>();
   const [rightBasic, setRightBasic] = useRecoilState(rightBasicState);
@@ -149,7 +152,7 @@ const JustifyLayout = ({ infiniteScroll, header }: Props) => {
 
             return (
               <div style={{ ...item, position: "absolute" }} key={image.id}>
-                {["gif", "mp4"].includes(image.ext.toLocaleLowerCase()) ? (
+                {_labelExt.includes(image.ext.toLocaleLowerCase()) ? (
                   <Badge.Ribbon
                     placement="start"
                     text={image.ext.toLocaleUpperCase()}
