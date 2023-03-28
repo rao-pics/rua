@@ -13,12 +13,12 @@
 </p>
 
 <p align='center'>
-    <a href='https://rao.pics'>线上演示</a> · <a href='https://github.com/rao-pics/core'>rao-pics</a>
+   <a href='https://docs.rao.pics'>在线文档</a> · <a href='https://rao.pics'>线上演示</a> · <a href='https://github.com/rao-pics/core'>Core</a>
 </p>
 
 ## Rua
 
-[rao-pics](https://github.com/rao-pics/core) 默认主题，支持 Ipad、暗黑模式、使用 nextjs 开发。
+[rao.pics](https://github.com/rao-pics/core) 默认主题，支持 Ipad、暗黑模式、使用 nextjs 开发。
 
 ## 📷 截图
 
@@ -43,23 +43,6 @@ API_HOST=
 pnpm i
 pnpm dev
 ```
-
-**如果你需要对主题进行二次开发，你还需要继续配置**
-
-在`.env`中增加 `DATABASE_URL`
-
-```sh
-DATABASE_URL=library地址
-```
-
-然后执行脚本，通过 prisma 生成 type 类型文件
-
-```
-pnpm db:generate
-```
-
-> 如果类型依然报错，尝试重启 vscode
-
 ## ☞ License
 
 Copyright (c) 2022 @rao-pics - [MIT](https://github.com/meetqy/eagleuse/blob/master/LICENSE)
