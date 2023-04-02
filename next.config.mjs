@@ -7,6 +7,7 @@ let { API_HOST, ignoreBuildErrors = "true" } = process.env;
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  output: "standalone",
 
   // 开发模式如果需要主题开发，可以设置为false
   // 配置DATABASE_URL
