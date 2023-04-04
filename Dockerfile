@@ -3,7 +3,6 @@ RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
 
 WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
-ENV NODE_ENV=production
 RUN  pnpm i
 
 FROM node:16 AS builder
