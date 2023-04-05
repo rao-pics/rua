@@ -1,30 +1,21 @@
-FROM node:16 AS deps
-RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
+FROM node:alpine
+RUN npm i -g pnpm
 
 WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 RUN  pnpm i
 
-FROM node:16 AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+COPY ./ ./
 
+# Build app
 RUN npm run build
 
-FROM node:16 AS runner
-WORKDIR /app
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/server.mjs ./server.mjs
-
-USER nextjs
+# Expose the listening port
 EXPOSE 9601
-ENV PORT 9601
 
-CMD ["npm", "start"]
+# Run container as non-root (unprivileged) user
+# The node user is provided in the Node.js Alpine base image
+USER node
+
+# Run npm start script when container starts
+CMD [ "npm", "start" ]

@@ -17,7 +17,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "start": "NODE_ENV=production node server.mjs",
+    "start": "next start",
     "build": "next build",
     "lint": "next lint"
   },
