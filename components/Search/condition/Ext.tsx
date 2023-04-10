@@ -1,7 +1,7 @@
 import { Select } from "antd";
 import { BooleanParam, StringParam, useQueryParams } from "use-query-params";
 
-const supportExt = ["jpg", "jpeg", "png", "bmp", "mp4", "gif"];
+const supportExt = ["jpg", "jpeg", "png", "bmp", "mp4", "gif", "pdf"];
 
 const Ext = () => {
   const [exts, setExt] = useQueryParams({
