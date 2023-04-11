@@ -7,13 +7,18 @@ import {
   DeleteOutlined,
   FolderOpenFilled,
   FolderFilled,
+  LockFilled,
+  UnlockFilled,
+  LockOutlined,
+  LockTwoTone,
 } from "@ant-design/icons";
-import { Menu, MenuProps, theme } from "antd";
+import { Button, Card, Menu, MenuProps, Modal, Result, Space, Typography, theme } from "antd";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { getFolderItems } from "./getFolderItems";
+import { CustomItemType, CustomOnTitleClick, getFolderItems } from "./getFolderItems";
 import { useRouter } from "next/router";
-import { useMount } from "ahooks";
+import { useMount, useSessionStorageState } from "ahooks";
+import Input from "antd/es/input/Input";
 
 const baseItems: MenuProps["items"] = [
   { label: "全部", icon: <FileImageOutlined />, key: "/" },
@@ -23,12 +28,17 @@ const baseItems: MenuProps["items"] = [
   { type: "divider" },
 ];
 
+type CustomExpendIcon = CustomItemType & { isOpen: boolean; isSubMenu: boolean; eventKey: string };
+
 const SideMenu = () => {
   const [openKeys, setOpenKeys] = useState<string[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const router = useRouter();
   const { token } = theme.useToken();
   const [rightBasic, setRightBasic] = useRecoilState(rightBasicState);
+  const [folderPwd, setFolderPwd] = useSessionStorageState<{ [key in string]: string }>("folder-passwrod", {
+    defaultValue: {},
+  });
 
   // 文件夹
   const folders = useRecoilValue(foldersState);
@@ -80,11 +90,7 @@ const SideMenu = () => {
     if (route.includes("/recycle")) return setSelectedKeys(["/recycle"]);
   });
 
-  const folderIconClick = (
-    e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    props: any
-  ) => {
+  const folderIconClick = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, props: CustomExpendIcon) => {
     e.stopPropagation();
 
     const { eventKey = "" } = props;
@@ -94,8 +100,30 @@ const SideMenu = () => {
     setOpenKeys([...openKeys]);
   };
 
-  const onTitleClick = useCallback(
-    (key: string) => {
+  const checkPwd = (item: EagleUse.FolderTree) => {
+    if (!item.password) return true;
+    return folderPwd[item.id] === item.password;
+  };
+
+  const onTitleClick = useCallback<CustomOnTitleClick>(
+    (key, item) => {
+      if (!checkPwd(item)) {
+        return Modal.confirm({
+          bodyStyle: { textAlign: "center" },
+          icon: null,
+          content: (
+            <Space direction="vertical">
+              <LockTwoTone style={{ fontSize: 108 }} />
+              <Typography.Text style={{ fontSize: 24 }} strong>
+                输入密码查看内容
+              </Typography.Text>
+              <Typography.Text type="secondary">密码提示：{item.passwordTips}</Typography.Text>
+              <Input />
+            </Space>
+          ),
+        });
+      }
+
       router.push(`/folder/${key}`);
       setRightBasicByName("ant-menu-submenu-selected");
     },
@@ -108,10 +136,7 @@ const SideMenu = () => {
     }
   }, [foldersTree, onTitleClick, openKeys]);
 
-  const items = useMemo(
-    () => baseItems.concat(folderItems || []),
-    [folderItems]
-  );
+  const items = useMemo(() => baseItems.concat(folderItems || []), [folderItems]);
 
   return (
     <>
@@ -136,10 +161,19 @@ const SideMenu = () => {
       <Menu
         openKeys={openKeys}
         expandIcon={(props) => {
-          return props.isOpen ? (
-            <FolderOpenFilled onClick={(e) => folderIconClick(e, props)} />
+          const _props = props as CustomExpendIcon;
+          const { isOpen, data } = _props;
+
+          return isOpen ? (
+            data.password ? (
+              <UnlockFilled onClick={(e) => folderIconClick(e, _props)} />
+            ) : (
+              <FolderOpenFilled onClick={(e) => folderIconClick(e, _props)} />
+            )
+          ) : data.password ? (
+            <LockFilled onClick={(e) => folderIconClick(e, _props)} />
           ) : (
-            <FolderFilled onClick={(e) => folderIconClick(e, props)} />
+            <FolderFilled onClick={(e) => folderIconClick(e, _props)} />
           );
         }}
         selectedKeys={selectedKeys}

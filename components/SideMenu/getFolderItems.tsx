@@ -1,16 +1,20 @@
 import { ItemType } from "antd/es/menu/hooks/useItems";
 
+export type CustomItemType = ItemType & { data: EagleUse.FolderTree };
+export type CustomOnTitleClick = (key: string, item: EagleUse.FolderTree) => void;
+
 function foldersTreeTransformItems(
   tree: EagleUse.FolderTree[],
-  onTitleClick: (key: string) => void
-): ItemType[] {
+  onTitleClick: CustomOnTitleClick
+): CustomItemType[] {
   if (tree.length > 0) {
     return tree.map((item) => {
-      const json: ItemType = {
+      const json: CustomItemType = {
         label: item.name,
         key: item.id,
+        data: item,
         children: item.children ? foldersTreeTransformItems(item.children, onTitleClick) : [],
-        onTitleClick: (info) => onTitleClick(info.key),
+        onTitleClick: (info) => onTitleClick(info.key, item),
       };
 
       return json;
@@ -20,7 +24,7 @@ function foldersTreeTransformItems(
   return [];
 }
 
-export const getFolderItems = (tree: EagleUse.FolderTree[], onTitleClick: (key: string) => void) => {
+export const getFolderItems = (tree: EagleUse.FolderTree[], onTitleClick: CustomOnTitleClick) => {
   return {
     label: `文件夹`,
     key: "/folders",
