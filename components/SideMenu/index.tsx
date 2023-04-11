@@ -9,16 +9,14 @@ import {
   FolderFilled,
   LockFilled,
   UnlockFilled,
-  LockOutlined,
-  LockTwoTone,
 } from "@ant-design/icons";
-import { Button, Card, Menu, MenuProps, Modal, Result, Space, Typography, theme } from "antd";
+import { Menu, MenuProps, theme } from "antd";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { CustomItemType, CustomOnTitleClick, getFolderItems } from "./getFolderItems";
 import { useRouter } from "next/router";
 import { useMount, useSessionStorageState } from "ahooks";
-import Input from "antd/es/input/Input";
+import PwdModal from "./PwdModal";
 
 const baseItems: MenuProps["items"] = [
   { label: "全部", icon: <FileImageOutlined />, key: "/" },
@@ -36,9 +34,12 @@ const SideMenu = () => {
   const router = useRouter();
   const { token } = theme.useToken();
   const [rightBasic, setRightBasic] = useRecoilState(rightBasicState);
-  const [folderPwd, setFolderPwd] = useSessionStorageState<{ [key in string]: string }>("folder-passwrod", {
+  const [curFolder, setCurFolder] = useState<EagleUse.FolderTree>();
+
+  const [sessionPwd] = useSessionStorageState<{ [key in string]: string }>("folder-passwrod", {
     defaultValue: {},
   });
+  const [pwdOpen, setPwdOpen] = useState<boolean>(false);
 
   // 文件夹
   const folders = useRecoilValue(foldersState);
@@ -100,34 +101,25 @@ const SideMenu = () => {
     setOpenKeys([...openKeys]);
   };
 
-  const checkPwd = (item: EagleUse.FolderTree) => {
-    if (!item.password) return true;
-    return folderPwd[item.id] === item.password;
-  };
+  const checkPwd = useCallback(
+    (item: EagleUse.FolderTree) => {
+      if (!item.password) return true;
+      return sessionPwd[item.id] === item.password;
+    },
+    [sessionPwd]
+  );
 
   const onTitleClick = useCallback<CustomOnTitleClick>(
     (key, item) => {
       if (!checkPwd(item)) {
-        return Modal.confirm({
-          bodyStyle: { textAlign: "center" },
-          icon: null,
-          content: (
-            <Space direction="vertical">
-              <LockTwoTone style={{ fontSize: 108 }} />
-              <Typography.Text style={{ fontSize: 24 }} strong>
-                输入密码查看内容
-              </Typography.Text>
-              <Typography.Text type="secondary">密码提示：{item.passwordTips}</Typography.Text>
-              <Input />
-            </Space>
-          ),
-        });
+        setCurFolder(item);
+        return setPwdOpen(true);
       }
 
       router.push(`/folder/${key}`);
       setRightBasicByName("ant-menu-submenu-selected");
     },
-    [router, setRightBasicByName]
+    [checkPwd, router, setRightBasicByName]
   );
 
   useEffect(() => {
@@ -158,6 +150,9 @@ const SideMenu = () => {
           padding-left: 12px;
         }
       `}</style>
+
+      {curFolder && <PwdModal open={pwdOpen} item={curFolder} onChange={setPwdOpen} />}
+
       <Menu
         openKeys={openKeys}
         expandIcon={(props) => {
