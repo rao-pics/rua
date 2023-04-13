@@ -49,7 +49,7 @@ export const getLoadMoreList = (
             .concat(more || { isDeleted: false })
             .filter((item) => item), // 排除null
         } as Prisma.ImageWhereInput,
-        include: { tags: true },
+        include: { tags: true, folders: true },
         orderBy: handleOrderBy(s),
       } as Prisma.ImageFindManyArgs),
     })
@@ -70,17 +70,14 @@ export const getLoadMoreList = (
   });
 };
 
-const handleOrderBy = (
-  s: QueryParams["s"]
-): Prisma.Enumerable<Prisma.ImageOrderByWithRelationInput> => {
+const handleOrderBy = (s: QueryParams["s"]): Prisma.Enumerable<Prisma.ImageOrderByWithRelationInput> => {
   const json: Prisma.Enumerable<Prisma.ImageOrderByWithRelationInput> = {};
 
   if (!s) {
     // 默认值
     json.modificationTime = "desc";
   } else {
-    const field = (s[0] ||
-      "modificationTime") as keyof Prisma.ImageOrderByWithRelationInput;
+    const field = (s[0] || "modificationTime") as keyof Prisma.ImageOrderByWithRelationInput;
     const type = (s[1] || "desc") as Prisma.SortOrder;
     json[field] = type;
   }
@@ -88,10 +85,7 @@ const handleOrderBy = (
   return json;
 };
 
-const handleSize = (size: {
-  w: QueryParams["w"];
-  h: QueryParams["h"];
-}): Prisma.ImageWhereInput[] => {
+const handleSize = (size: { w: QueryParams["w"]; h: QueryParams["h"] }): Prisma.ImageWhereInput[] => {
   const { w, h } = size;
   const params: Prisma.ImageWhereInput[] = [];
 

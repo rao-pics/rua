@@ -1,24 +1,12 @@
-import {
-  forwardRef,
-  useContext,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from "react";
-import { LayoutContentRefContext, rightBasicState } from "@/store";
+import { forwardRef, useContext, useEffect, useImperativeHandle, useMemo, useRef } from "react";
+import { LayoutContentRefContext, foldersState, rightBasicState } from "@/store";
 import JustifyLayout from "@/components/JustifyLayout";
-import { useInfiniteScroll } from "ahooks";
+import { useInfiniteScroll, useSessionStorageState } from "ahooks";
 import Search from "@/components/Search";
-import {
-  ArrayParam,
-  BooleanParam,
-  NumberParam,
-  StringParam,
-  useQueryParams,
-} from "use-query-params";
+import { ArrayParam, BooleanParam, NumberParam, StringParam, useQueryParams } from "use-query-params";
 import { MoreListResult, getLoadMoreList } from "@/utils/getLoadmoreList";
 import { useRouter } from "next/router";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { Prisma } from "@raopics/prisma-client";
 
 interface Props {
@@ -34,6 +22,24 @@ const Page = forwardRef<PageHandle, Props>((props, ref) => {
   const isFirstReload = useRef(true);
   const LayoutContentRef = useContext(LayoutContentRefContext);
   const [rightBasic, setRightBasic] = useRecoilState(rightBasicState);
+  const folders = useRecoilValue(foldersState);
+
+  // 在 session 中的 id 就是已经通过验证的
+  const [pwdFolderObj] = useSessionStorageState<{ [key: string]: string }>("folder-passwrod", {
+    defaultValue: {},
+  });
+
+  // 密码验证未通过的文件夹
+  const notPassFolders = useMemo(() => {
+    const pwdFolder = Object.keys(pwdFolderObj);
+    return folders
+      .filter((item) => {
+        if (!item.password) return false;
+        if (item.password && pwdFolder.includes(item.id)) return false;
+        return item;
+      })
+      .map((item) => item.id);
+  }, [folders, pwdFolderObj]);
 
   const [queryParams, setQueryParams] = useQueryParams({
     ext: StringParam,
@@ -53,7 +59,16 @@ const Page = forwardRef<PageHandle, Props>((props, ref) => {
       const page = queryParams.page || 1;
       queryParams.page = d ? page + 1 : page;
 
-      return getLoadMoreList(queryParams, props.more);
+      return getLoadMoreList(queryParams, {
+        ...props.more,
+        folders: {
+          none: {
+            id: {
+              in: notPassFolders,
+            },
+          },
+        },
+      });
     },
     {
       target: LayoutContentRef.current,
@@ -84,10 +99,7 @@ const Page = forwardRef<PageHandle, Props>((props, ref) => {
     const { data } = infiniteScroll;
     if (!data) return;
 
-    if (
-      rightBasic.fileCount != data?.count ||
-      rightBasic.fileSize != data.size
-    ) {
+    if (rightBasic.fileCount != data?.count || rightBasic.fileSize != data.size) {
       setRightBasic({
         ...rightBasic,
         fileCount: data.count,
