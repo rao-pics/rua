@@ -2,7 +2,7 @@
  * @type {import('next').NextConfig}
  */
 
-const { API_HOST, NODE_ENV } = process.env;
+const { API_HOST } = process.env;
 
 const nextConfig = {
   reactStrictMode: true,
@@ -12,10 +12,14 @@ const nextConfig = {
     unoptimized: true,
   },
 
+  output: "standalone",
+
+  typescript: {
+    ignoreBuildErrors: process.env.NODE_ENV === "production",
+  },
+
   eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
-    ignoreDuringBuilds: NODE_ENV === "production",
+    ignoreBuildErrors: process.env.NODE_ENV === "production",
   },
 
   async redirects() {

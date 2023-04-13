@@ -15,8 +15,7 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@/*": ["./*"],
-      "@raopics/prisma-client": ["./node_modules/prisma-client/dist"]
+      "@/*": ["./*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
