@@ -1,21 +1,6 @@
 import { tagsState } from "@/store";
-import {
-  AppstoreFilled,
-  QuestionCircleFilled,
-  StarFilled,
-  TagsFilled,
-} from "@ant-design/icons";
-import {
-  Col,
-  Divider,
-  Layout,
-  Menu,
-  MenuProps,
-  Row,
-  Tag,
-  theme,
-  Typography,
-} from "antd";
+import { AppstoreFilled, QuestionCircleFilled, StarFilled, TagsFilled } from "@ant-design/icons";
+import { Col, Divider, Layout, Menu, MenuProps, Row, Tag, theme, Typography } from "antd";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
@@ -49,12 +34,10 @@ type RouteName = "manage" | "no" | "starred" | string;
  * @param exclude 需要排除的tags
  * @returns { [key: string]: string[] }
  */
-const tagsArrayToJson = (tags: EagleUse.TagWithCountImage[]) => {
-  const json: { [key: string]: EagleUse.TagWithCountImage[] } = {};
+const tagsArrayToJson = (tags: RaoPics.TagWithCountImage[]) => {
+  const json: { [key: string]: RaoPics.TagWithCountImage[] } = {};
   tags.forEach((item) => {
-    const first = (
-      pinyin.getCamelChars(item.id) as string
-    )[0].toLocaleUpperCase();
+    const first = (pinyin.getCamelChars(item.id) as string)[0].toLocaleUpperCase();
 
     // 是数字的放在其他中
     if (!isNaN(Number(first))) {
@@ -82,8 +65,8 @@ type TagsCollection = {
   [key in RouteName]: {
     data:
       | {
-          [key: string]: (EagleUse.TagWithCountImage & {
-            tagsGroups?: EagleUse.TagsGroup[];
+          [key: string]: (RaoPics.TagWithCountImage & {
+            tagsGroups?: RaoPics.TagsGroup[];
           })[];
         }
       | undefined;
@@ -102,10 +85,7 @@ export default function Page() {
     starred: { data: undefined, count: undefined },
   });
 
-  const nowTagData = useMemo(
-    () => tagsCollection[name]?.data || {},
-    [name, tagsCollection]
-  );
+  const nowTagData = useMemo(() => tagsCollection[name]?.data || {}, [name, tagsCollection]);
 
   const [tagsGroupsItems, setTagsGroupsItems] = useState<MenuItem[]>([]);
 
@@ -113,28 +93,10 @@ export default function Page() {
     const { manage, no, starred } = tagsCollection;
 
     return [
-      getItem(
-        handleLabel("标签管理", manage.count),
-        "/tags/manage",
-        <AppstoreFilled />
-      ),
-      getItem(
-        handleLabel("未分类", no.count),
-        "/tags/no",
-        <QuestionCircleFilled />
-      ),
-      getItem(
-        handleLabel("常用标签", starred.count),
-        "/tags/starred",
-        <StarFilled />
-      ),
-      getItem(
-        `标签群组(${tagsGroupsItems.length})`,
-        "",
-        null,
-        tagsGroupsItems,
-        "group"
-      ),
+      getItem(handleLabel("标签管理", manage.count), "/tags/manage", <AppstoreFilled />),
+      getItem(handleLabel("未分类", no.count), "/tags/no", <QuestionCircleFilled />),
+      getItem(handleLabel("常用标签", starred.count), "/tags/starred", <StarFilled />),
+      getItem(`标签群组(${tagsGroupsItems.length})`, "", null, tagsGroupsItems, "group"),
     ];
   }, [tagsCollection, tagsGroupsItems]);
 
@@ -231,16 +193,16 @@ export default function Page() {
       .then(({ data }) => {
         const tagsGroups: TagsCollection = {};
         const filterData = (
-          data as (EagleUse.TagsGroup & {
-            tags: EagleUse.TagWithCountImage[];
+          data as (RaoPics.TagsGroup & {
+            tags: RaoPics.TagWithCountImage[];
           })[]
         ).map((item) => {
           // 找到有count的标签 并 过滤掉标签中图片为0的标签
           item.tags = item.tags
             .map((tag) => tags.find((item) => tag.id === item.id))
-            .filter((item) => item) as EagleUse.TagWithCountImage[];
+            .filter((item) => item) as RaoPics.TagWithCountImage[];
 
-          const json: { [key: string]: EagleUse.TagWithCountImage[] } = {};
+          const json: { [key: string]: RaoPics.TagWithCountImage[] } = {};
           json[item.name] = item.tags;
 
           tagsGroups[item.id] = {
@@ -271,8 +233,8 @@ export default function Page() {
 
   // 渲染tags列表
   const tagsContentElement = (tagJson: {
-    [key: string]: (EagleUse.TagWithCountImage & {
-      tagsGroups?: EagleUse.TagsGroup[];
+    [key: string]: (RaoPics.TagWithCountImage & {
+      tagsGroups?: RaoPics.TagsGroup[];
     })[];
   }) => {
     const result = Object.keys(tagJson).sort();
@@ -285,14 +247,8 @@ export default function Page() {
         <div key={k}>
           <Row>
             <Col>
-              <Typography.Title
-                level={3}
-                style={{ textTransform: "capitalize" }}
-              >
-                {k === "number" ? "#" : k}{" "}
-                <Typography.Text type="secondary">
-                  ({item.length})
-                </Typography.Text>
+              <Typography.Title level={3} style={{ textTransform: "capitalize" }}>
+                {k === "number" ? "#" : k} <Typography.Text type="secondary">({item.length})</Typography.Text>
               </Typography.Title>
             </Col>
           </Row>
@@ -301,18 +257,12 @@ export default function Page() {
               <Col key={tag.id}>
                 <Tag
                   color={
-                    tag.tagsGroups && tag.tagsGroups.length
-                      ? tag.tagsGroups[0].color || "default"
-                      : "default"
+                    tag.tagsGroups && tag.tagsGroups.length ? tag.tagsGroups[0].color || "default" : "default"
                   }
                 >
                   <Link href={`/tag/${tag.id}?page=1&r=true`}>
                     {tag.id}
-                    <Typography.Text
-                      type="secondary"
-                      strong
-                      style={{ marginLeft: 5 }}
-                    >
+                    <Typography.Text type="secondary" strong style={{ marginLeft: 5 }}>
                       {tag._count.images}
                     </Typography.Text>
                   </Link>
@@ -353,10 +303,7 @@ export default function Page() {
             }}
           />
         </Layout.Sider>
-        <Layout.Content
-          className="scroll-bar"
-          style={{ padding: 20, overflowY: "auto" }}
-        >
+        <Layout.Content className="scroll-bar" style={{ padding: 20, overflowY: "auto" }}>
           {tagsContentElement(nowTagData)}
         </Layout.Content>
       </Layout>

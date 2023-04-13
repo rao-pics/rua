@@ -2,7 +2,7 @@ export * from "./pinyin";
 export * from "./transform";
 
 export const handleImageUrl = (
-  image: EagleUse.Image,
+  image: RaoPics.Image,
   // 是否返回原图
   original?: boolean
 ) => {
@@ -19,7 +19,7 @@ export const handleImageUrl = (
   }
 };
 
-export const handleImageAlt = (image: EagleUse.Image) => {
+export const handleImageAlt = (image: RaoPics.Image) => {
   let str = "";
 
   if (image.tags) {
@@ -46,9 +46,9 @@ export const handleTime = (time: bigint) => {
   );
 };
 
-export function getPalettes(image: EagleUse.Image) {
+export function getPalettes(image: RaoPics.Image) {
   if (image.processingPalette) return null;
   if (!image.palettes) return null;
 
-  return JSON.parse(image.palettes) as EagleUse.ImagePalette[];
+  return JSON.parse(image.palettes) as RaoPics.ImagePalette[];
 }

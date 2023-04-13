@@ -5,7 +5,7 @@ import { encode } from "js-base64";
 import { useEffect, useState } from "react";
 
 interface Props {
-  item: EagleUse.FolderTree;
+  item: RaoPics.FolderTree;
   open: boolean;
   onChange: (open: boolean) => void;
 }

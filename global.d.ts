@@ -1,4 +1,4 @@
-declare namespace EagleUse {
+declare namespace RaoPics {
   export type PrismaImage = import("@raopics/prisma-client").Image;
   export type TagsGroup = import("@raopics/prisma-client").TagsGroups;
   export type Tag = import("@raopics/prisma-client").Tag;
@@ -11,7 +11,7 @@ declare namespace EagleUse {
     _count?: { images: number };
   }
 
-  export interface TagWithCountImage extends EagleUse.Tag {
+  export interface TagWithCountImage extends RaoPics.Tag {
     _count: {
       images: number;
     };

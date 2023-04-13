@@ -3,7 +3,7 @@ import { Card, Col, Divider, Modal, Row, Space, Tag, Typography, theme } from "a
 import CustomImage from "../CustomImage";
 
 interface Props {
-  image?: EagleUse.Image;
+  image?: RaoPics.Image;
   open?: boolean;
   onCancel?: () => void;
 }

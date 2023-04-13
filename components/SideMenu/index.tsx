@@ -35,7 +35,7 @@ const SideMenu = () => {
   const router = useRouter();
   const { token } = theme.useToken();
   const [rightBasic, setRightBasic] = useRecoilState(rightBasicState);
-  const [curFolder, setCurFolder] = useState<EagleUse.FolderTree>();
+  const [curFolder, setCurFolder] = useState<RaoPics.FolderTree>();
 
   const [checkedFolderPwd] = useCheckedFolderPwd();
 

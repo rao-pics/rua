@@ -16,7 +16,7 @@ interface QueryParams {
 }
 
 export interface MoreListResult {
-  list: EagleUse.Image[];
+  list: RaoPics.Image[];
   queryParams: QueryParams;
   count: number;
   size: number;

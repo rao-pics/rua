@@ -15,7 +15,7 @@ export interface RightBasic {
   // 添加日期 时间戳
   modificationTime?: number;
   // 选中的图片
-  image?: EagleUse.Image;
+  image?: RaoPics.Image;
 }
 
 // 右侧基础信息

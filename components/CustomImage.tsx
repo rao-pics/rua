@@ -6,7 +6,7 @@ import { useRecoilState } from "recoil";
 import _ from "lodash";
 
 interface Props {
-  image: EagleUse.Image;
+  image: RaoPics.Image;
   width?: number;
   height?: number;
   fill?: boolean | undefined;

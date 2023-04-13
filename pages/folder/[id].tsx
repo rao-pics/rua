@@ -66,7 +66,7 @@ const FolderPage = () => {
     );
   };
 
-  const imageJSX = (images?: EagleUse.Image[]) => {
+  const imageJSX = (images?: RaoPics.Image[]) => {
     if (!images || !images.length)
       return (
         <div
