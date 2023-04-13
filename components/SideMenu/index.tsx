@@ -66,16 +66,21 @@ const SideMenu = () => {
     [setRightBasic, rightBasic]
   );
 
+  // 选中文件夹  只有文件夹才有 id 参数
   useEffect(() => {
     if (router.isReady) {
-      const { id } = router.query;
-      if (id) {
+      const pathname = "/" + router.pathname.split("/")[1];
+
+      if (pathname.includes("folder")) {
+        const { id } = router.query;
         setSelectedKeys([id as string]);
         const folder = folders.find((item) => item.id === id);
 
         if (folder && folder.pid) {
           setOpenKeys([folder.pid]);
         }
+      } else {
+        setSelectedKeys([pathname]);
       }
 
       setRightBasicByName("ant-menu-item-selected");
@@ -168,7 +173,6 @@ const SideMenu = () => {
         items={items}
         onClick={(e) => {
           router.push(e.key === "/tags" ? e.key + "/manage" : e.key);
-          setSelectedKeys([e.key]);
           setRightBasicByName("ant-menu-item-selected");
         }}
       />
