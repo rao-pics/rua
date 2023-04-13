@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^13.2.3",
-    "@raopics/prisma-client": "^1.2.9",
+    "@raopics/prisma-client": "^1.4.0",
     "@types/justified-layout": "^4.1.0",
     "@types/lodash": "^4.14.191",
     "@types/node": "18.14.6",

@@ -3,12 +3,12 @@ RUN npm i -g pnpm
 
 WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
-RUN  pnpm i
+RUN  pnpm i --frozen-lockfile --prod
 
 COPY ./ ./
 
 # Build app
-RUN npm run build
+RUN pnpm run build
 
 # Expose the listening port
 EXPOSE 9601

@@ -5,7 +5,7 @@ const TagPage = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  return <Page more={{ tags: { some: { id: id as string } } }} />;
+  return <Page AND={{ tags: { some: { id: id as string } } }} />;
 };
 
 export default TagPage;
