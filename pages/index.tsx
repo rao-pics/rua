@@ -11,7 +11,8 @@ import { Prisma } from "@raopics/prisma-client";
 import { useCheckedFolderPwd } from "@/hooks";
 
 interface Props {
-  more?: Prisma.Enumerable<Prisma.ImageWhereInput>;
+  AND?: Prisma.Enumerable<Prisma.ImageWhereInput>;
+  NOT?: Prisma.Enumerable<Prisma.ImageWhereInput>;
 }
 
 export interface PageHandle {
@@ -57,14 +58,13 @@ const Page = forwardRef<PageHandle, Props>((props, ref) => {
       queryParams.page = d ? page + 1 : page;
 
       return getLoadMoreList(queryParams, {
-        ...props.more,
-        folders: {
-          none: {
-            id: {
-              in: notPassFolders,
-            },
+        NOT: {
+          ...props.NOT,
+          folders: {
+            some: { id: { in: notPassFolders } },
           },
         },
+        AND: props.AND,
       });
     },
     {

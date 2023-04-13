@@ -25,7 +25,10 @@ export interface MoreListResult {
 
 export const getLoadMoreList = (
   queryParams: QueryParams,
-  more?: Prisma.Enumerable<Prisma.ImageWhereInput>
+  options?: {
+    AND?: Prisma.Enumerable<Prisma.ImageWhereInput>;
+    NOT?: Prisma.Enumerable<Prisma.ImageWhereInput>;
+  }
 ): Promise<MoreListResult> => {
   const { w, h, k, ext, s } = queryParams;
   const page = queryParams.page || 1;
@@ -37,6 +40,7 @@ export const getLoadMoreList = (
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         where: {
+          NOT: options?.NOT,
           AND: [
             ...handleSize({ w, h }),
             // 扩展名
@@ -45,8 +49,9 @@ export const getLoadMoreList = (
             k && {
               OR: [{ annotation: { contains: k } }, { name: { contains: k } }],
             },
+            { isDeleted: false },
           ]
-            .concat(more || { isDeleted: false })
+            .concat(options?.AND)
             .filter((item) => item), // 排除null
         } as Prisma.ImageWhereInput,
         include: { tags: true, folders: true },

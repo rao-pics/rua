@@ -1,7 +1,7 @@
 import Page from "./index";
 
 const NoTagPage = () => {
-  return <Page more={{ tags: { none: {} } }} />;
+  return <Page AND={{ tags: { none: {} } }} />;
 };
 
 export default NoTagPage;

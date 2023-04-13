@@ -96,7 +96,7 @@ const FolderPage = () => {
   return (
     <>
       <FolderChild />
-      <Page ref={pageRef} more={{ folders: { some: { id: { in: id } } } }} />
+      <Page ref={pageRef} AND={{ folders: { some: { id: { in: id } } } }} />
     </>
   );
 };

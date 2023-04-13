@@ -27,7 +27,7 @@ const Container = ({ Component, pageProps }: AppProps) => {
   const [, setCheckFolderPwd] = useRecoilState(CheckFolderPwdState);
 
   useMount(() => {
-    setCheckFolderPwd(JSON.parse(sessionStorage.getItem("checked-folder-password") || "") || []);
+    setCheckFolderPwd(JSON.parse(sessionStorage.getItem("checked-folder-password") || "[]") || []);
   });
 
   return (
