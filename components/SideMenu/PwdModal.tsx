@@ -1,5 +1,5 @@
+import { useCheckedFolderPwd } from "@/hooks";
 import { LockTwoTone } from "@ant-design/icons";
-import { useSessionStorageState } from "ahooks";
 import { Input, Modal, Space, Typography, message } from "antd";
 import { encode } from "js-base64";
 import { useEffect, useState } from "react";
@@ -11,9 +11,8 @@ interface Props {
 }
 
 const PwdModal = ({ item, open, onChange }: Props) => {
-  const [sessionPwd, setSessionPwd] = useSessionStorageState<{ [key in string]: string }>("folder-passwrod", {
-    defaultValue: {},
-  });
+  const [, setCheckedFolderPwd] = useCheckedFolderPwd();
+
   const [pwd, setPwd] = useState<string>();
 
   useEffect(() => {
@@ -28,8 +27,11 @@ const PwdModal = ({ item, open, onChange }: Props) => {
         if (!pwd) return message.error("密码不正确！");
         const _pwd = encode(pwd);
         if (_pwd !== item.password) return message.error("密码不正确！");
-        sessionPwd[item.id] = _pwd;
-        setSessionPwd(sessionPwd);
+        setCheckedFolderPwd((value) => {
+          const _value = JSON.parse(JSON.stringify(value || []));
+          _value.push(item.id);
+          return _value;
+        });
         onChange(false);
       }}
       onCancel={() => {

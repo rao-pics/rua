@@ -1,13 +1,14 @@
 import { forwardRef, useContext, useEffect, useImperativeHandle, useMemo, useRef } from "react";
 import { LayoutContentRefContext, foldersState, rightBasicState } from "@/store";
 import JustifyLayout from "@/components/JustifyLayout";
-import { useInfiniteScroll, useSessionStorageState } from "ahooks";
+import { useInfiniteScroll } from "ahooks";
 import Search from "@/components/Search";
 import { ArrayParam, BooleanParam, NumberParam, StringParam, useQueryParams } from "use-query-params";
 import { MoreListResult, getLoadMoreList } from "@/utils/getLoadmoreList";
 import { useRouter } from "next/router";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Prisma } from "@raopics/prisma-client";
+import { useCheckedFolderPwd } from "@/hooks";
 
 interface Props {
   more?: Prisma.Enumerable<Prisma.ImageWhereInput>;
@@ -24,22 +25,18 @@ const Page = forwardRef<PageHandle, Props>((props, ref) => {
   const [rightBasic, setRightBasic] = useRecoilState(rightBasicState);
   const folders = useRecoilValue(foldersState);
 
-  // 在 session 中的 id 就是已经通过验证的
-  const [pwdFolderObj] = useSessionStorageState<{ [key: string]: string }>("folder-passwrod", {
-    defaultValue: {},
-  });
+  const [checkedFolderPwd] = useCheckedFolderPwd();
 
   // 密码验证未通过的文件夹
   const notPassFolders = useMemo(() => {
-    const pwdFolder = Object.keys(pwdFolderObj);
     return folders
       .filter((item) => {
         if (!item.password) return false;
-        if (item.password && pwdFolder.includes(item.id)) return false;
+        if (item.password && checkedFolderPwd.includes(item.id)) return false;
         return item;
       })
       .map((item) => item.id);
-  }, [folders, pwdFolderObj]);
+  }, [folders, checkedFolderPwd]);
 
   const [queryParams, setQueryParams] = useQueryParams({
     ext: StringParam,

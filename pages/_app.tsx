@@ -9,7 +9,8 @@ import Pkg from "@/package.json";
 import { QueryParamProvider } from "use-query-params";
 import { NextAdapter } from "next-query-params";
 import { AppProps } from "next/app";
-import { ThemeState } from "@/hooks";
+import { CheckFolderPwdState, ThemeState } from "@/hooks";
+import { useMount } from "ahooks";
 
 export default function MyApp(props: AppProps) {
   return (
@@ -23,23 +24,22 @@ export default function MyApp(props: AppProps) {
 
 const Container = ({ Component, pageProps }: AppProps) => {
   const [theme] = useRecoilState(ThemeState);
+  const [, setCheckFolderPwd] = useRecoilState(CheckFolderPwdState);
+
+  useMount(() => {
+    setCheckFolderPwd(JSON.parse(sessionStorage.getItem("checked-folder-password") || "") || []);
+  });
 
   return (
     <>
       <Head>
         <title>{`${Pkg.name.toLocaleUpperCase()} - ${Pkg.description}`}</title>
         <link rel="shortcut icon" href="/favicon.ico" />
-        <meta
-          name="description"
-          content={`${Pkg.description} - ${Pkg.name.toLocaleUpperCase()}`}
-        />
+        <meta name="description" content={`${Pkg.description} - ${Pkg.name.toLocaleUpperCase()}`} />
       </Head>
       <ConfigProvider
         theme={{
-          algorithm:
-            theme === "light"
-              ? AntdTheme.defaultAlgorithm
-              : AntdTheme.darkAlgorithm,
+          algorithm: theme === "light" ? AntdTheme.defaultAlgorithm : AntdTheme.darkAlgorithm,
         }}
         locale={zhCN}
       >

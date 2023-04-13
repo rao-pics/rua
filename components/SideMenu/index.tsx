@@ -15,8 +15,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { CustomItemType, CustomOnTitleClick, getFolderItems } from "./getFolderItems";
 import { useRouter } from "next/router";
-import { useMount, useSessionStorageState } from "ahooks";
+import { useMount } from "ahooks";
 import PwdModal from "./PwdModal";
+import { useCheckedFolderPwd } from "@/hooks";
 
 const baseItems: MenuProps["items"] = [
   { label: "全部", icon: <FileImageOutlined />, key: "/" },
@@ -36,9 +37,8 @@ const SideMenu = () => {
   const [rightBasic, setRightBasic] = useRecoilState(rightBasicState);
   const [curFolder, setCurFolder] = useState<EagleUse.FolderTree>();
 
-  const [sessionPwd] = useSessionStorageState<{ [key in string]: string }>("folder-passwrod", {
-    defaultValue: {},
-  });
+  const [checkedFolderPwd] = useCheckedFolderPwd();
+
   const [pwdOpen, setPwdOpen] = useState<boolean>(false);
 
   // 文件夹
@@ -101,17 +101,9 @@ const SideMenu = () => {
     setOpenKeys([...openKeys]);
   };
 
-  const checkPwd = useCallback(
-    (item: EagleUse.FolderTree) => {
-      if (!item.password) return true;
-      return sessionPwd[item.id] === item.password;
-    },
-    [sessionPwd]
-  );
-
   const onTitleClick = useCallback<CustomOnTitleClick>(
     (key, item) => {
-      if (!checkPwd(item)) {
+      if (!checkedFolderPwd.includes(item.id) && item.password) {
         setCurFolder(item);
         return setPwdOpen(true);
       }
@@ -119,7 +111,7 @@ const SideMenu = () => {
       router.push(`/folder/${key}`);
       setRightBasicByName("ant-menu-submenu-selected");
     },
-    [checkPwd, router, setRightBasicByName]
+    [checkedFolderPwd, router, setRightBasicByName]
   );
 
   useEffect(() => {
