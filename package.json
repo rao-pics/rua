@@ -1,6 +1,6 @@
 {
   "name": "rua",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "Default theme for the rao-pics.",
   "author": "meetqy <meetqy@qq.com>",
   "homepage": "https://rao.pics",
@@ -48,6 +48,7 @@
     "@typescript-eslint/parser": "^5.52.0",
     "eslint": "^8.34.0",
     "eslint-config-next": "^13.2.3",
+    "standard-version": "^9.5.0",
     "typescript": "4.9.5"
   }
 }
