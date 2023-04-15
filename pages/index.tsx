@@ -143,6 +143,10 @@ const Page = forwardRef<PageHandle, Props>((props, ref) => {
   return <JustifyLayout infiniteScroll={infiniteScroll} header={<Search />} />;
 });
 
+Page.defaultProps = {
+  AND: { isDeleted: false },
+};
+
 Page.displayName = "Page";
 
 export default Page;

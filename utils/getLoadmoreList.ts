@@ -49,7 +49,6 @@ export const getLoadMoreList = (
             k && {
               OR: [{ annotation: { contains: k } }, { name: { contains: k } }],
             },
-            { isDeleted: false },
           ]
             .concat(options?.AND)
             .filter((item) => item), // 排除null
