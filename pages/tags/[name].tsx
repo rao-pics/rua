@@ -227,7 +227,6 @@ export default function Page() {
             );
           })
         );
-        tagsGroupsIsLoad.current = false;
       });
   }, [name, tags, tagsCollection]);
 
